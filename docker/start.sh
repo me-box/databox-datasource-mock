@@ -1,2 +1,2 @@
 #!/bin/sh
-cd /root/databox-datasource-mock && npm run start
+cd /root/databox-datasource-mock && npm start

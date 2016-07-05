@@ -10,3 +10,4 @@ RUN cd /root && git clone https://github.com/me-box/databox-datasource-mock.git
 RUN cd /root/databox-datasource-mock && npm install
 COPY start.sh /root
 RUN chmod +x /root/start.sh
+CMD ["/root/start.sh"]

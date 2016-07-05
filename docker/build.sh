@@ -1,2 +1,3 @@
 #!/bin/sh
-docker build --no-cache -t databox-datastore-mock .
+docker build -t databox-datasource-mock .
+
