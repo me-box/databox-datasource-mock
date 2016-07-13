@@ -1,5 +1,5 @@
 import mqtt from 'mqtt';  
-
+import config from '../config';
 
 const products = [
 
@@ -27,14 +27,12 @@ const generateTemperatureData = (tag)=>{
 	const date = new Date();
     const time = ISODateString(date);
 
-    const data = JSON.stringify({
+    return JSON.stringify({
 							"id": "temperature/" + tag,
 							"time": time,
 							"value": (15 + Math.random() * 10).toFixed(1),
 							"unit":"degrees celcius"
 						})
-	console.log(data);
-	return data;
 }
 
 const generateBulbData = ()=> {
@@ -94,30 +92,37 @@ export default function init(){
 
 	client.on('connect', () => {  
   		
-  		setInterval(() => {
-  			client.publish('temperature/TA', generateTemperatureData("TA"))
-  		}, Math.random() * (fastmax - fastmin) + fastmin) 
-  		
-  		setInterval(() => {
-  			client.publish('temperature/TB', generateTemperatureData("TB"))
-  		}, Math.random() * (fastmax - fastmin) + fastmin) 
-  		
-  		setInterval(() => {
-  			client.publish('temperature/TC', generateTemperatureData("TC"))
-  		}, Math.random() * (fastmax - fastmin) + fastmin) 
-  		
-  		setInterval(() => {
-  			client.publish('ds/bulbs', generateBulbData())
-  		}, Math.random() * (fastmax - fastmin) + fastmin) 
+  		if (config.sources.indexOf('temperature') != -1){
+	  		setInterval(() => {
+	  			client.publish('temperature/TA', generateTemperatureData("TA"))
+	  		}, Math.random() * (fastmax - fastmin) + fastmin) 
+	  		
+	  		setInterval(() => {
+	  			client.publish('temperature/TB', generateTemperatureData("TB"))
+	  		}, Math.random() * (fastmax - fastmin) + fastmin) 
+	  		
+	  		setInterval(() => {
+	  			client.publish('temperature/TC', generateTemperatureData("TC"))
+	  		}, Math.random() * (fastmax - fastmin) + fastmin) 
+	  	}
 
-  		setInterval(() => {
-  			client.publish('ds/utensils', generateUtensilData())
-  		}, Math.random() * (mediummax - mediummin) + mediummin) 
+	  	if (config.sources.indexOf('bulbs') != -1){	
+	  		setInterval(() => {
+	  			client.publish('ds/bulbs', generateBulbData())
+	  		}, Math.random() * (fastmax - fastmin) + fastmin) 
+	  	}
+	  	if (config.sources.indexOf('utensils') != -1){	
+  			setInterval(() => {
+  				client.publish('ds/utensils', generateUtensilData())
+  			}, 	Math.random() * (mediummax - mediummin) + mediummin) 
+  		}
 
-  		setInterval(() => {
-  			client.publish('ds/fmcgs', generateFMCGData())
-  		}, Math.random() * (slowmax - slowmin) + slowmin) 
+  		if (config.sources.indexOf('fmcgs') != -1){	
 
+  			setInterval(() => {
+  				client.publish('ds/fmcgs', generateFMCGData())
+  			}, 	Math.random() * (slowmax - slowmin) + slowmin) 
+  		}
 
 	})
 
