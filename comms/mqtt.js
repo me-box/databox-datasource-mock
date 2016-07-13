@@ -13,14 +13,28 @@ const products = [
 						{id: "cc-998-sks", 	product: "crispy creme deep fat lard bar"}
 					];
 
+const ISODateString = function(d) {
+    function pad(n) {return n<10 ? '0'+n : n}
+    return d.getUTCFullYear()+'-'
+         + pad(d.getUTCMonth()+1)+'-'
+         + pad(d.getUTCDate())+'T'
+         + pad(d.getUTCHours())+':'
+         + pad(d.getUTCMinutes())+':'
+         + pad(d.getUTCSeconds())+'Z'
+}
 
 const generateTemperatureData = (tag)=>{
-	return JSON.stringify({
+	const date = new Date();
+    const time = ISODateString(date);
+
+    const data = JSON.stringify({
 							"id": "temperature/" + tag,
-							"time": (new Date()).toISOString(),
+							"time": time,
 							"value": (15 + Math.random() * 10).toFixed(1),
 							"unit":"degrees celcius"
 						})
+	console.log(data);
+	return data;
 }
 
 const generateBulbData = ()=> {
