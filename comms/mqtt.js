@@ -23,14 +23,14 @@ const ISODateString = function(d) {
          + pad(d.getUTCSeconds())+'Z'
 }
 
-const generateTemperatureData = (tag)=>{
+const generateTemperatureData = (tag, min, max)=>{
 	const date = new Date();
     const time = ISODateString(date);
 
     return JSON.stringify({
 							"id": "temperature/" + tag,
 							"time": time,
-							"value": (15 + Math.random() * 10).toFixed(1),
+							"value": (min + Math.random() * (max-min)).toFixed(1),
 							"unit":"degrees celcius"
 						})
 }
@@ -81,28 +81,28 @@ const generateFMCGData = ()=> {
 export default function init(){
 
 	const client = mqtt.connect('mqtt://mosquitto:1883');
-	const fastmin = 500;
-	const fastmax = 5000;
+	const fastmin = 2000;
+	const fastmax = 3000;
 
-	const mediummin = 1000;
-	const mediummax = 10000;
+	const mediummin = 4000;
+	const mediummax = 8000;
 
-	const slowmin = 10000;
-	const slowmax = 60000;
+	const slowmin = 15000;
+	const slowmax = 20000;
 
 	client.on('connect', () => {  
   		
   		if (config.sources.indexOf('temperature') != -1){
 	  		setInterval(() => {
-	  			client.publish('temperature/TA', generateTemperatureData("TA"))
+	  			client.publish('temperature/TA', generateTemperatureData("TA", 10, 20))
 	  		}, Math.random() * (fastmax - fastmin) + fastmin) 
 	  		
 	  		setInterval(() => {
-	  			client.publish('temperature/TB', generateTemperatureData("TB"))
+	  			client.publish('temperature/TB', generateTemperatureData("TB", 5, 30))
 	  		}, Math.random() * (fastmax - fastmin) + fastmin) 
 	  		
 	  		setInterval(() => {
-	  			client.publish('temperature/TC', generateTemperatureData("TC"))
+	  			client.publish('temperature/TC', generateTemperatureData("TC", -15, 20))
 	  		}, Math.random() * (fastmax - fastmin) + fastmin) 
 	  	}
 
