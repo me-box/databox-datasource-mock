@@ -1,5 +1,5 @@
 import mqtt from 'mqtt';  
-
+import config from '../config';
 
 const products = [
 
@@ -13,12 +13,24 @@ const products = [
 						{id: "cc-998-sks", 	product: "crispy creme deep fat lard bar"}
 					];
 
+const ISODateString = function(d) {
+    function pad(n) {return n<10 ? '0'+n : n}
+    return d.getUTCFullYear()+'-'
+         + pad(d.getUTCMonth()+1)+'-'
+         + pad(d.getUTCDate())+'T'
+         + pad(d.getUTCHours())+':'
+         + pad(d.getUTCMinutes())+':'
+         + pad(d.getUTCSeconds())+'Z'
+}
 
-const generateTemperatureData = (tag)=>{
-	return JSON.stringify({
+const generateTemperatureData = (tag, min, max)=>{
+	const date = new Date();
+    const time = ISODateString(date);
+
+    return JSON.stringify({
 							"id": "temperature/" + tag,
-							"time": (new Date()).toISOString(),
-							"value": (15 + Math.random() * 10).toFixed(1),
+							"time": time,
+							"value": (min + Math.random() * (max-min)).toFixed(1),
 							"unit":"degrees celcius"
 						})
 }
@@ -69,41 +81,48 @@ const generateFMCGData = ()=> {
 export default function init(){
 
 	const client = mqtt.connect('mqtt://mosquitto:1883');
-	const fastmin = 500;
-	const fastmax = 5000;
+	const fastmin = 2000;
+	const fastmax = 3000;
 
-	const mediummin = 1000;
-	const mediummax = 10000;
+	const mediummin = 4000;
+	const mediummax = 8000;
 
-	const slowmin = 10000;
-	const slowmax = 60000;
+	const slowmin = 15000;
+	const slowmax = 20000;
 
 	client.on('connect', () => {  
   		
-  		setInterval(() => {
-  			client.publish('temperature/TA', generateTemperatureData("TA"))
-  		}, Math.random() * (fastmax - fastmin) + fastmin) 
-  		
-  		setInterval(() => {
-  			client.publish('temperature/TB', generateTemperatureData("TB"))
-  		}, Math.random() * (fastmax - fastmin) + fastmin) 
-  		
-  		setInterval(() => {
-  			client.publish('temperature/TC', generateTemperatureData("TC"))
-  		}, Math.random() * (fastmax - fastmin) + fastmin) 
-  		
-  		setInterval(() => {
-  			client.publish('ds/bulbs', generateBulbData())
-  		}, Math.random() * (fastmax - fastmin) + fastmin) 
+  		if (config.sources.indexOf('temperature') != -1){
+	  		setInterval(() => {
+	  			client.publish('temperature/TA', generateTemperatureData("TA", 10, 20))
+	  		}, Math.random() * (fastmax - fastmin) + fastmin) 
+	  		
+	  		setInterval(() => {
+	  			client.publish('temperature/TB', generateTemperatureData("TB", 5, 30))
+	  		}, Math.random() * (fastmax - fastmin) + fastmin) 
+	  		
+	  		setInterval(() => {
+	  			client.publish('temperature/TC', generateTemperatureData("TC", -15, 20))
+	  		}, Math.random() * (fastmax - fastmin) + fastmin) 
+	  	}
 
-  		setInterval(() => {
-  			client.publish('ds/utensils', generateUtensilData())
-  		}, Math.random() * (mediummax - mediummin) + mediummin) 
+	  	if (config.sources.indexOf('bulbs') != -1){	
+	  		setInterval(() => {
+	  			client.publish('ds/bulbs', generateBulbData())
+	  		}, Math.random() * (fastmax - fastmin) + fastmin) 
+	  	}
+	  	if (config.sources.indexOf('utensils') != -1){	
+  			setInterval(() => {
+  				client.publish('ds/utensils', generateUtensilData())
+  			}, 	Math.random() * (mediummax - mediummin) + mediummin) 
+  		}
 
-  		setInterval(() => {
-  			client.publish('ds/fmcgs', generateFMCGData())
-  		}, Math.random() * (slowmax - slowmin) + slowmin) 
+  		if (config.sources.indexOf('fmcgs') != -1){	
 
+  			setInterval(() => {
+  				client.publish('ds/fmcgs', generateFMCGData())
+  			}, 	Math.random() * (slowmax - slowmin) + slowmin) 
+  		}
 
 	})
 
