@@ -20,9 +20,15 @@ app.post('/api/:subtype', function(req,res){
 
     var s = new Readable();
 	s._read = function noop() {}; // redundant? see update below
-    setInterval(()=>{s.push(next(req.params.subtype));}, 500);
+    var timer = setInterval(()=>{s.push(next(req.params.subtype));}, 500);
 	//s.push(null);
-  	s.pipe(res)	
+	try{
+  		s.pipe(res)	
+  	}catch(err){
+  		console.log("error!")
+  		console.log(err);
+  		clearInterval(timer);
+  	}
 });
 
-server.listen(8080);
+server.listen(8087);
