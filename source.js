@@ -18,11 +18,18 @@ app.get('/', function(req,res){
 
 app.post('/api/:subtype', function(req,res){
     console.log("seen request!");
+    var sensor = req.params.subtype;
+    
     var s = new Readable();
 	s._read = function noop() {}; // redundant? see update below
-    setInterval(()=>{s.push(next(req.params.subtype));}, 500);
+    var periodic = setInterval(()=>{s.push(next(sensor));}, 500);
 	//s.push(null);
-  	s.pipe(res)	
+	try{
+  		s.pipe(res);
+  	}catch(err){
+  		console.log(`stopping pushing for ${sensor}`);
+  		clearInterval(periodic);
+  	}
 });
 
 server.listen(8080);
