@@ -15,10 +15,10 @@ export default function next(type){
 		case "magnetometer":
 		case "gravity":
 		case "gyroscope":
-			return  `${Date.now()-1045}, ${(50*Math.random().toFixed(2))}, ${(50*Math.random().toFixed(2))}, ${(50*Math.random().toFixed(2))}\n`;
+			return  `${Date.now()-1045}, ${(50*Math.random()).toFixed(2)}, ${(50*Math.random()).toFixed(2)}, ${(50*Math.random()).toFixed(2)}\n`;
 		
 		case "rotation":
-			return  `${Date.now()-1045}, ${(50*Math.random().toFixed(2))}, ${(50*Math.random().toFixed(2))}, ${(50*Math.random().toFixed(2))},0,0\n`;
+			return  `${Date.now()-1045}, ${(50*Math.random()).toFixed(2)}, ${(50*Math.random()).toFixed(2)}, ${(50*Math.random()).toFixed(2)},0,0\n`;
 		
 		case "battery":
 			return `${Date.now()}, ${Math.floor(100*Math.random())}, ${Math.floor(300*Math.random())},  ${Math.floor(300*Math.random())}, usb, not charging, good\n`;
