@@ -12,17 +12,30 @@ import mqttinit from './comms/mqtt';
 
 mqttinit();
 
+var _intervalFor = function(sensor){
+	switch(sensor){
+		case "bluetooth":
+		case "battery":
+			return 10000;
+		
+		default:
+			return 800;
+	}
+	
+}
+
 app.get('/', function(req,res){
   res.send({result:true});
 });
 
 app.post('/api/:subtype', function(req,res){
-    console.log("seen request!");
+   
     var sensor = req.params.subtype;
-    
+   	var interval = _intervalFor(sensor);
+   	 
     var s = new Readable();
 	s._read = function noop() {}; // redundant? see update below
-    var periodic = setInterval(()=>{s.push(next(sensor));}, 500);
+    var periodic = setInterval(()=>{s.push(next(sensor));}, _intervalFor(sensor));
 	//s.push(null);
 	try{
   		s.pipe(res);
@@ -31,5 +44,7 @@ app.post('/api/:subtype', function(req,res){
   		clearInterval(periodic);
   	}
 });
+
+
 
 server.listen(8080);
