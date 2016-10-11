@@ -6,11 +6,10 @@ var app = express();
 app.use('/', express.static("static"));
 var server = http.createServer(app);
 var Readable = require('stream').Readable;
-import next from './mock';
- 
-import mqttinit from './comms/mqtt';
+var mock = require('./mock');
+var mqtt = require('./comms/mqtt');
 
-mqttinit();
+mqtt.init();
 
 var _intervalFor = function(sensor){
 	switch(sensor){
@@ -30,13 +29,12 @@ app.get('/', function(req,res){
 
 app.post('/api/:subtype', function(req,res){
    
-    var sensor = req.params.subtype;
+        var sensor = req.params.subtype;
    	var interval = _intervalFor(sensor);
    	 
-    var s = new Readable();
+        var s = new Readable();
 	s._read = function noop() {}; // redundant? see update below
-    var periodic = setInterval(()=>{s.push(next(sensor));}, _intervalFor(sensor));
-	//s.push(null);
+        var periodic = setInterval(function(){s.push(mock.next(sensor));}, _intervalFor(sensor));
 	try{
   		s.pipe(res);
   	}catch(err){
