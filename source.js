@@ -8,6 +8,7 @@ var server = http.createServer(app);
 var Readable = require('stream').Readable;
 var mock = require('./mock');
 var mqtt = require('./comms/mqtt');
+var moment = require('moment');
 
 mqtt.init();
 
@@ -20,7 +21,6 @@ var _intervalFor = function(sensor){
 		default:
 			return 800;
 	}
-	
 }
 
 app.get('/', function(req,res){
@@ -29,18 +29,34 @@ app.get('/', function(req,res){
 
 app.post('/api/:subtype', function(req,res){
    
-        var sensor = req.params.subtype;
+    var sensor = req.params.subtype;
    	var interval = _intervalFor(sensor);
    	 
-        var s = new Readable();
+    var s = new Readable();
 	s._read = function noop() {}; // redundant? see update below
-        var periodic = setInterval(function(){s.push(mock.next(sensor));}, _intervalFor(sensor));
+    var periodic = setInterval(function(){s.push(mock.next(sensor));}, _intervalFor(sensor));
+	
 	try{
   		s.pipe(res);
   	}catch(err){
   		console.log(`stopping pushing for ${sensor}`);
   		clearInterval(periodic);
   	}
+});
+
+app.post('/reading/latest/:sensorid', function(req,res){
+	var sensor = req.params.sensorid;
+	var ts = moment.utc();
+	
+	switch  (sensorid){
+	
+		case "freemem":
+			res.send({ts:ts, value: Math.random() * 900000});
+			break;
+			
+		default:
+			res.send({ts:ts, value: Math.random() * 100});	
+	}
 });
 
 
