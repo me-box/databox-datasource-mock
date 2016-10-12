@@ -51,11 +51,23 @@ app.post('/reading/latest/:sensorid', function(req,res){
 	switch  (sensorid){
 	
 		case "freemem":
-			res.send({ts:ts, value: Math.random() * 900000});
+			res.send([[{ts:ts, value: (500000*Math.random()).toFixed(2)}]]);
 			break;
-			
+		
+		case "luminosity":
+			res.send([[{ts:ts, value: (20000*Math.random()).toFixed(2)}]]);
+			break;
+		
+		case "movement":
+			res.send([[{ts:ts, value: (-10000 + (20000*Math.random())).toFixed(2)}]]);
+			break;
+				
+		case "temp":
+			res.send([[{ts:ts, value: (35*Math.random()).toFixed(2)}]]);
+			break;
+		
 		default:
-			res.send({ts:ts, value: Math.random() * 100});	
+			res.send([[{ts:ts, value: (100*Math.random()).toFixed(2)}]]);	
 	}
 });
 
