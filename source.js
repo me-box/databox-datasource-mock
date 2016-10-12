@@ -4,6 +4,9 @@ var bodyparser = require('body-parser');
 
 var app = express();
 app.use('/', express.static("static"));
+app.use(bodyparser.urlencoded({extended:false}));
+app.use(bodyparser.json());
+
 var server = http.createServer(app);
 var Readable = require('stream').Readable;
 var mock = require('./mock');
@@ -44,7 +47,7 @@ app.post('/api/:subtype', function(req,res){
   	}
 });
 
-app.post('/reading/latest/', function(req,res){
+app.post('/reading/latest', function(req,res){
 	
 	var sensor = req.body.sensor_id;
 	
