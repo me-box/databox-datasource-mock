@@ -44,11 +44,15 @@ app.post('/api/:subtype', function(req,res){
   	}
 });
 
-app.post('/reading/latest/:sensorid', function(req,res){
-	var sensor = req.params.sensorid;
+app.post('/reading/latest/', function(req,res){
+	
+	var sensor = req.body.sensor_id;
+	
+	console.log("seen request for sensor data " + sensor);
+	
 	var ts = moment.utc();
 	
-	switch  (sensorid){
+	switch  (sensor){
 	
 		case "freemem":
 			res.send([[{ts:ts, value: (500000*Math.random()).toFixed(2)}]]);
