@@ -12,6 +12,7 @@ var Readable = require('stream').Readable;
 var mock = require('./mock');
 var mqtt = require('./comms/mqtt');
 var moment = require('moment');
+var twitter = require('./data/twitter');
 
 mqtt.init();
 
@@ -47,11 +48,37 @@ app.post('/api/:subtype', function(req,res){
   	}
 });
 
+//mock of the blob store
+app.post('/data/latest', function(req,res){
+	var sensor = req.body.sensor_id;
+	var ts = moment.utc();
+	
+	switch  (sensor){
+		
+		case "twitter":
+			res.send([{data:twitter.tweets[Math.round(Math.random()*twitter.tweets.length-1)], timestamp:Date.now()}]);
+			break;
+				
+		case "blub-bri":
+			res.send([{data:Math.round(Math.random()*255), timestamp:Date.now()}]);
+			break;
+			
+		case "bulb-hue":
+			res.send([{data:Math.round(Math.random()*65000), timestamp:Date.now()}]);
+			break;
+			
+		case "bulb-on":
+			res.send([{data:!!Math.floor(Math.random() * 2) ? "on":"off", timestamp:Date.now()}]);
+			break; 
+	}
+});
+
+
+//mock of the timeseries store
 app.post('/reading/latest', function(req,res){
 	
 	var sensor = req.body.sensor_id;
 	
-	console.log("seen request for sensor data " + sensor);
 	
 	var ts = moment.utc();
 	
