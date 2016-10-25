@@ -53,9 +53,11 @@ app.post('/data/latest', function(req,res){
 	var sensor = req.body.sensor_id;
 	var ts = moment.utc();
 	
+	console.log("seen request for sensor " + sensor);
+	
 	switch  (sensor){
 		
-		case "twitter":
+		case "twitterHashTagStream":
 			res.send([{
 							data:{
 								text: twitter.tweets[Math.round(Math.random()*twitter.tweets.length-1)],	
