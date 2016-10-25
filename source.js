@@ -48,6 +48,12 @@ app.post('/api/:subtype', function(req,res){
   	}
 });
 
+
+app.post('/actuate', function(req,res){
+	console.log("seen an actuate request!");
+	res.send({});
+});
+
 //mock of the blob store
 app.post('/data/latest', function(req,res){
 	var sensor = req.body.sensor_id;
@@ -70,7 +76,7 @@ app.post('/data/latest', function(req,res){
 					]);
 			break;
 				
-		case "blub-bri":
+		case "bulb-bri":
 			res.send([{data:Math.round(Math.random()*255), timestamp:Date.now(),sensor_id:sensor,vendor_id:1}]);
 			break;
 			
