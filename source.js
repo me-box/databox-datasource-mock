@@ -56,19 +56,28 @@ app.post('/data/latest', function(req,res){
 	switch  (sensor){
 		
 		case "twitter":
-			res.send([{data:twitter.tweets[Math.round(Math.random()*twitter.tweets.length-1)], timestamp:Date.now()}]);
+			res.send([{
+							data:{
+								text: twitter.tweets[Math.round(Math.random()*twitter.tweets.length-1)],	
+							},
+							timestamp:Date.now(),
+							sensor_id:sensor, 
+							vendor_id:1,
+						
+						} 	
+					]);
 			break;
 				
 		case "blub-bri":
-			res.send([{data:Math.round(Math.random()*255), timestamp:Date.now()}]);
+			res.send([{data:Math.round(Math.random()*255), timestamp:Date.now(),sensor_id:sensor,vendor_id:1}]);
 			break;
 			
 		case "bulb-hue":
-			res.send([{data:Math.round(Math.random()*65000), timestamp:Date.now()}]);
+			res.send([{data:Math.round(Math.random()*65000), timestamp:Date.now(),sensor_id:sensor,vendor_id:1}]);
 			break;
 			
 		case "bulb-on":
-			res.send([{data:!!Math.floor(Math.random() * 2) ? "on":"off", timestamp:Date.now()}]);
+			res.send([{data:!!Math.floor(Math.random() * 2) ? "on":"off", timestamp:Date.now(),sensor_id:sensor,vendor_id:1}]);
 			break; 
 	}
 });
