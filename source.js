@@ -10,11 +10,8 @@ app.use(bodyparser.json());
 var server = http.createServer(app);
 var Readable = require('stream').Readable;
 var mock = require('./mock');
-var mqtt = require('./comms/mqtt');
 var moment = require('moment');
 var twitter = require('./data/twitter');
-
-mqtt.init();
 
 var _intervalFor = function(sensor){
 	switch(sensor){
@@ -85,7 +82,7 @@ app.post('/data/latest', function(req,res){
 			break;
 			
 		case "bulb-on":
-			res.send([{data:!!Math.floor(Math.random() * 2) ? "on":"off", timestamp:Date.now(),sensor_id:sensor,vendor_id:1}]);
+			res.send([{data: Math.random() * 2 > 1 ? "on":"off", timestamp:Date.now(),sensor_id:sensor,vendor_id:1}]);
 			break; 
 	}
 });
