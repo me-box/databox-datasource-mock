@@ -60,6 +60,34 @@ app.post('/data/latest', function(req,res){
 	
 	switch  (sensor){
 		
+		case "humidity":
+			res.send([{data:Math.round(Math.random()*100), timestamp:Date.now(),sensor_id:sensor,vendor_id:1}]);
+			break;
+		
+		case "temperature":
+			res.send([{data:(Math.random()*30).toFixed(1), timestamp:Date.now(),sensor_id:sensor,vendor_id:1}]);
+			break;
+		
+		case "tilt":
+			res.send([{data: Math.round(Math.random()), timestamp:Date.now(),sensor_id:sensor,vendor_id:1}]);
+			break;
+		
+		case "button1":
+		case "button2":
+		case "button3":
+		case "button4":
+		case "button5":
+			res.send([{data: Math.round(Math.random()), timestamp:Date.now(),sensor_id:sensor,vendor_id:1}]);
+			break;
+		
+		case "battery":
+			res.send([{data: Math.round(Math.random()*5), timestamp:Date.now(),sensor_id:sensor,vendor_id:1}]);
+			break;	
+		
+		case "light":
+			res.send([{data: Math.round(Math.random()*20000), timestamp:Date.now(),sensor_id:sensor,vendor_id:1}]);
+			break;	
+		
 		case "twitterHashTagStream":
 			res.send([{
 							data:{
