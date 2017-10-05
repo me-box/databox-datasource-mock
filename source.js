@@ -72,14 +72,6 @@ app.post('/data/latest', function(req,res){
 			res.send([{data: Math.round(Math.random()), timestamp:Date.now(),sensor_id:sensor,vendor_id:1}]);
 			break;
 		
-		case "button1":
-		case "button2":
-		case "button3":
-		case "button4":
-		case "button5":
-			res.send([{data: Math.round(Math.random()), timestamp:Date.now(),sensor_id:sensor,vendor_id:1}]);
-			break;
-		
 		case "battery":
 			res.send([{data: Math.round(Math.random()*5), timestamp:Date.now(),sensor_id:sensor,vendor_id:1}]);
 			break;	
@@ -130,6 +122,12 @@ app.post('/reading/latest', function(req,res){
 			res.send([[{ts:ts, value: (500000*Math.random()).toFixed(2)}]]);
 			break;
 		
+		case "loadavg1":
+        case "loadavg5":
+        case "loadavg15":
+			res.send([[{ts:ts, value: (5*Math.random()).toFixed(2)}]]);
+			break;
+
 		case "luminosity":
 			res.send([[{ts:ts, value: (20000*Math.random()).toFixed(2)}]]);
 			break;
