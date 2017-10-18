@@ -34769,7 +34769,7 @@ module.exports = {
 			case "accelerometer":
 			case "linear-acceleration":
 			case "gravity":
-				return Date.now() - 1045 + "," + (Math.random().toFixed() * 76 - 38) + "," + (Math.random().toFixed() * 76 - 38) + "," + (Math.random().toFixed() * 76 - 38) + ",0,0\n";
+				return Date.now() - 1045 + "," + (Math.random().toFixed(2) * 76 - 38) + "," + (Math.random().toFixed(2) * 76 - 38) + "," + (Math.random().toFixed(2) * 76 - 38) + ",0,0\n";
 
 			case "magnetometer":
 
