@@ -51,7 +51,7 @@ app.post('/actuate', function(req,res){
 	res.send({});
 });
 
-//mock of the blob store
+//mock of the blob store deprecated?
 app.post('/data/latest', function(req,res){
 	var sensor = req.body.sensor_id;
 	var ts = moment.utc();
@@ -102,7 +102,8 @@ app.post('/data/latest', function(req,res){
 			break;
 			
 		case "bulb-on":
-			res.send([{data: Math.random() * 2 > 1 ? "on":"off", timestamp:Date.now(),sensor_id:sensor,vendor_id:1}]);
+			console.log("seen bulb-on request");
+			res.send([{data: Math.random() > 0.5 ? "on":"off", timestamp:Date.now(),sensor_id:sensor,vendor_id:1}]);
 			break; 
 	}
 });
@@ -112,7 +113,6 @@ app.post('/data/latest', function(req,res){
 app.post('/reading/latest', function(req,res){
 	
 	var sensor = req.body.sensor_id;
-	
 	
 	var ts = moment.utc();
 	
@@ -139,6 +139,51 @@ app.post('/reading/latest', function(req,res){
 		case "temp":
 			res.send([[{ts:ts, value: (35*Math.random()).toFixed(2)}]]);
 			break;
+
+		case "humidity":
+			res.send([{data:Math.round(Math.random()*100), timestamp:Date.now(),sensor_id:sensor,vendor_id:1}]);
+			break;
+		
+		case "temperature":
+			res.send([{data:(Math.random()*30).toFixed(1), timestamp:Date.now(),sensor_id:sensor,vendor_id:1}]);
+			break;
+		
+		case "tilt":
+			res.send([{data: Math.round(Math.random()), timestamp:Date.now(),sensor_id:sensor,vendor_id:1}]);
+			break;
+		
+		case "battery":
+			res.send([{data: Math.round(Math.random()*5), timestamp:Date.now(),sensor_id:sensor,vendor_id:1}]);
+			break;	
+		
+		case "light":
+			res.send([{data: Math.round(Math.random()*20000), timestamp:Date.now(),sensor_id:sensor,vendor_id:1}]);
+			break;	
+		
+		case "twitterHashTagStream":
+			res.send([{
+							data:{
+								text: twitter.tweets[Math.round(Math.random()*twitter.tweets.length-1)],	
+							},
+							timestamp:Date.now(),
+							sensor_id:sensor, 
+							vendor_id:1,
+						
+						} 	
+					]);
+			break;
+				
+		case "bulb-bri":
+			res.send([{data:Math.round(Math.random()*255), timestamp:Date.now(),sensor_id:sensor,vendor_id:1}]);
+			break;
+			
+		case "bulb-hue":
+			res.send([{data:Math.round(Math.random()*65000), timestamp:Date.now(),sensor_id:sensor,vendor_id:1}]);
+			break;
+			
+		case "bulb-on":
+			res.send([{data: Math.random() > 0.5 ? "on":"off", timestamp:Date.now(),sensor_id:sensor,vendor_id:1}]);
+			break; 
 		
 		default:
 			res.send([[{ts:ts, value: (100*Math.random()).toFixed(2)}]]);	
@@ -148,4 +193,4 @@ app.post('/reading/latest', function(req,res){
 
 
 server.listen(8080);
-console.log("server listening on 8080")
+console.log("mock data server listening on 8080")
